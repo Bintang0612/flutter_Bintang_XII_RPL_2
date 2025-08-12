@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -100,6 +101,9 @@ class _LoginPageState extends State<LoginPage> {
                 content: Text('Login berhasil!'),
               ),
                 );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage(),));
               }
             },
             child: const Text('Masuk'),
