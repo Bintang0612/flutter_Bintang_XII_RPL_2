@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,63 +9,52 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _pages = <Widget>[
+    Center(child: Text('Home', style: TextStyle(fontSize: 24))),
+    Center(child: Text('Tagihan', style: TextStyle(fontSize: 24))),
+    Center(child: Text('History Pembayaran', style: TextStyle(fontSize: 24))),
+    Center(child: Profile()),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text('Home Iuran Warga'),
+        centerTitle: true,
+        title: const Text('Iuran Warga'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Daftar Iuran Warga',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView(
-                children: [
-                  Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.person),
-                      title: const Text('Budi Santoso'),
-                      subtitle: const Text('Iuran: Rp 50.000'),
-                      trailing: const Icon(Icons.check_circle, color: Colors.green),
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.person),
-                      title: const Text('Siti Aminah'),
-                      subtitle: const Text('Iuran: Rp 50.000'),
-                      trailing: const Icon(Icons.cancel, color: Colors.red),
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.person),
-                      title: const Text('Agus Wijaya'),
-                      subtitle: const Text('Iuran: Rp 50.000'),
-                      trailing: const Icon(Icons.check_circle, color: Colors.green),
-                    ),
-                  ),
-                  // Tambahkan data warga lain di sini
-                ],
-              ),
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-                // aksi tambah iuran
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Tambah Iuran'),
-            ),
-          ],
-        ),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt),
+            label: 'Tagihan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
