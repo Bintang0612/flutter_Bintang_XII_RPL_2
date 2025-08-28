@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/home.dart';
+import 'package:flutter_application_1/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,10 +10,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ApiService apiService = ApiService();
 
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isloading = false;
 
   Widget _gap() {
     return const SizedBox(height: 16);
@@ -43,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             _gap(),
             TextFormField(
+              controller: _emailController,
               decoration: const InputDecoration(
             labelText: 'Email',
             border: OutlineInputBorder(),
@@ -61,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             _gap(),
             TextFormField(
+              controller: _passwordController,
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
             labelText: 'Password',
@@ -93,20 +99,31 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-            onPressed: () {
+            onPressed: _isloading ? null : () async {
               if (_formKey.currentState?.validate() ?? false) {
-                // TODO: Implement login logic
-                ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Login berhasil!'),
-              ),
-                );
-                Navigator.pushReplacement(
+                setState(() => _isloading = true);
+                try {
+                  String  token = await apiService.login(
+                    _emailController.text.trim(),
+                    _passwordController.text.trim(),
+                  );
+                  if (!mounted) return;
+                  Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage(),));
-              }
-            },
-            child: const Text('Masuk'),
+                  MaterialPageRoute(builder: (_) => HomePage(token:token, userId: 2),
+                  ));
+                } 
+                catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                } finally {
+                  setState(() => _isloading = false);
+                }
+                }
+                },
+            child: _isloading
+              ? const CircularProgressIndicator(color: Colors.white)
+              : const Text('Masuk', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],

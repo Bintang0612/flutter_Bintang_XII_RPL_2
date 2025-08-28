@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/profile.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String token;
+  final int userId;
+  const HomePage({super.key, required this.token, required this.userId});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -11,17 +13,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = <Widget>[
-    Center(child: Text('Home', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Tagihan', style: TextStyle(fontSize: 24))),
-    Center(child: Text('History Pembayaran', style: TextStyle(fontSize: 24))),
-    Center(child: Profile()),
-  ];
+  late final List<Widget> _pages;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _pages = <Widget>[
+      const Center(child: Text('Home Page Content')),
+      const Center(child: Text('Tagihan Page Content')),
+      const Center(child: Text('History Page Content')),
+      ProfilePage(userId: widget.userId),
+    ];
   }
 
   @override
@@ -54,7 +56,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
     );
   }
