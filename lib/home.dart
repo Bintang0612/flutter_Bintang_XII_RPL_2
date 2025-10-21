@@ -4,6 +4,7 @@ import 'package:flutter_application_1/profile.dart';
 class HomePage extends StatefulWidget {
   final String token;
   final int userId;
+
   const HomePage({super.key, required this.token, required this.userId});
 
   @override
@@ -11,18 +12,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 0; // Variabel untuk menyimpan indeks tab yang aktif
 
   late final List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
-    _pages = <Widget>[
-      const Center(child: Text('Home Page Content')),
-      const Center(child: Text('Tagihan Page Content')),
-      const Center(child: Text('History Page Content')),
-      ProfilePage(userId: widget.userId),
+    _pages = [
+      const Center(child: Text('Ini halaman Beranda')),
+      const Center(child: Text('Ini halaman Bookmark')),
+      const Center(child: Text('Ini halaman Cart')),
+      ProfilePage(
+          userId: widget.userId.toString()), // Menggunakan userId dari widget
     ];
   }
 
@@ -30,32 +32,41 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-        title: const Text('Iuran Warga'),
+        title: const Text('Aplikasi Flutter'), // Judul di AppBar
       ),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+      body: _pages[_selectedIndex], // Menampilkan halaman sesuai index
+      bottomNavigationBar: NavigationBar(
+        animationDuration: const Duration(milliseconds: 300), // Animasi tab
+        selectedIndex: _selectedIndex, // Tab aktif
+        onDestinationSelected: (index) {
+          // Saat tab dipilih
+          setState(() {
+            _selectedIndex = index; // Update index dan render ulang halaman
+          });
+        },
+        destinations: const [
+          // Daftar item NavigationBar
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined), // Icon default
+            selectedIcon: Icon(Icons.home_rounded), // Icon aktif
+            label: 'Beranda',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt),
-            label: 'Tagihan',
+          NavigationDestination(
+            icon: Icon(Icons.bookmark_border_outlined),
+            selectedIcon: Icon(Icons.bookmark_rounded),
+            label: 'Bookmarks',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
+          NavigationDestination(
+            icon: Icon(Icons.shopping_bag_outlined),
+            selectedIcon: Icon(Icons.shopping_bag),
+            label: 'Cart',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
+          NavigationDestination(
+            icon: Icon(Icons.person_outline_rounded),
+            selectedIcon: Icon(Icons.person_rounded),
+            label: 'Profile',
           ),
         ],
-        currentIndex: _selectedIndex,
       ),
     );
   }

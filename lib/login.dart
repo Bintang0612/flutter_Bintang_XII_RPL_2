@@ -13,7 +13,7 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ApiService apiService = ApiService();
 
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isloading = false;
@@ -47,22 +47,12 @@ class _LoginPageState extends State<LoginPage> {
             ),
             _gap(),
             TextFormField(
-              controller: _emailController,
+              controller: _usernameController,
               decoration: const InputDecoration(
             labelText: 'Email',
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.email),
               ),
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Email tidak boleh kosong';
-            }
-            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-              return 'Email tidak valid';
-            }
-            return null;
-              },
             ),
             _gap(),
             TextFormField(
@@ -85,15 +75,6 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
               ),
-              validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Password tidak boleh kosong';
-            }
-            if (value.length < 6) {
-              return 'Password minimal 6 karakter';
-            }
-            return null;
-              },
             ),
             _gap(),
             SizedBox(
@@ -104,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                 setState(() => _isloading = true);
                 try {
                   String  token = await apiService.login(
-                    _emailController.text.trim(),
+                    _usernameController.text.trim(),
                     _passwordController.text.trim(),
                   );
                   if (!mounted) return;
